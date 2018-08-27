@@ -2,7 +2,7 @@
 // email: westley@sylabs.io
 // Date: Aug 27, 2018
 // https://github.com/WestleyK/rpi-backlight
-// Version-1.0.0
+// Version-1.0.1
 //
 // Designed and tested for raspberry pi with official 7 inch touchdcreen. 
 //
@@ -38,16 +38,19 @@ import (
     "os"
     "fmt"
     "strconv"
+    "time"
+    "bufio"
     "io/ioutil"
 )
 
-var SCRIPT_VERSION = "version-1.0.0"
+var SCRIPT_VERSION = "version-1.0.1"
 var SCRIPT_DATE = "Date: Aug 27, 2018"
 
 var MIN_BRIGHTNESS = "15"
 var MAX_BRIGHTNESS = "255"
 var DEFAULT_ON = "180"
 var ADJUST_UP = "25"
+var ADJUST_DOWN = "25"
 var BRIGHTNESS_FILE = "brightness"
 var POWER_FILE = "power"
 
@@ -56,8 +59,8 @@ var BRIGHT = ""
 func help_menu() {
     fmt.Print("Usage: rpi-backlight [OPTION]\n")
     fmt.Print("      -help | --help (print help menu)\n")
-    fmt.Print("      -somthing (sonthing)\n")
-    fmt.Print("      -somthing (somthing)\n")
+    fmt.Print("      -u | -up (adjust brightness up by: ", ADJUST_UP, "/", MAX_BRIGHTNESS, ")\n")
+    fmt.Print("      -d | -down (adjust brightness down by: ", ADJUST_DOWN, "/", MAX_BRIGHTNESS, ")\n")
     fmt.Print("      -info | --info (print info)\n")
     fmt.Print("      -version | --version (print version)\n")
     fmt.Print("Source code: https://github.com/WestleyK/rpi-backlight\n")
@@ -70,11 +73,43 @@ func script_version() {
     os.Exit(0)
 }
 
+func sleep_mode() {
+    fmt.Print("Press <ENTER> to exit this mode:\n")
+    time.Sleep(1 * time.Second)
+    errF := ioutil.WriteFile(POWER_FILE, []byte("1"), 0644)
+    if errF != nil {
+        fmt.Println(errF)
+    }
+
+
+    reader := bufio.NewReader(os.Stdin)
+    text, _ := reader.ReadString('\n')
+    fmt.Println(text)
+
+    errN := ioutil.WriteFile(POWER_FILE, []byte("0"), 0644)
+    if errN != nil {
+        fmt.Println(errN)
+    }
+    os.Exit(0)
+}
+
 func write_file() {
+    if _, err := os.Stat(BRIGHTNESS_FILE); os.IsNotExist(err) {
+        fmt.Print("File does not exist:\n", BRIGHTNESS_FILE)
+        os.Exit(1)
+    }
     err := ioutil.WriteFile(BRIGHTNESS_FILE, []byte(BRIGHT), 0644)
     if err != nil {
+        if os.IsPermission(err) {
+            fmt.Println("Unable to write to ", BRIGHTNESS_FILE)
+            fmt.Println(err)
+            os.Exit(1)
+        }
         fmt.Println(err)
+        os.Exit(1)
     }
+    fmt.Print("Current brightness: ", BRIGHT, "\n")
+    os.Exit(0)
 }
 
 func adjust_up() {
@@ -89,15 +124,12 @@ func adjust_up() {
     ADJUST_UP, err := strconv.Atoi(ADJUST_UP)
     MAX_BRIGHTNESS, err := strconv.Atoi(MAX_BRIGHTNESS)
 
-    fmt.Println(CURRENT)
     CURRENT += ADJUST_UP
     if CURRENT >= MAX_BRIGHTNESS {
         fmt.Print("Max Brightness!\n")
         CURRENT = MAX_BRIGHTNESS
     }
     BRIGHT = strconv.Itoa(CURRENT)
-    fmt.Println(CURRENT)
-    fmt.Println(BRIGHT)
     write_file()
 }
 
@@ -110,18 +142,15 @@ func adjust_down() {
     CURRENT_STRING := string(b)
 
     CURRENT, err := strconv.Atoi(CURRENT_STRING)
-    ADJUST_UP, err := strconv.Atoi(ADJUST_UP)
+    ADJUST_DOWN, err := strconv.Atoi(ADJUST_DOWN)
     MIN_BRIGHTNESS, err := strconv.Atoi(MIN_BRIGHTNESS)
 
-    fmt.Println(CURRENT)
-    CURRENT -= ADJUST_UP
+    CURRENT -= ADJUST_DOWN
     if CURRENT <= MIN_BRIGHTNESS {
         fmt.Print("Min Brightness!\n")
         CURRENT = MIN_BRIGHTNESS
     }
     BRIGHT = strconv.Itoa(CURRENT)
-    fmt.Println(CURRENT)
-    fmt.Println(BRIGHT)
     write_file()
 }
 
@@ -134,6 +163,7 @@ func turn_on() {
     if errP != nil {
         fmt.Println(errP)
     }
+    os.Exit(0)
 }
 
 func main() {
@@ -154,6 +184,8 @@ func main() {
             adjust_up()
         } else if OPTION == "-d" || OPTION == "-down" {
             adjust_down()
+        } else if OPTION == "-s" || OPTION == "-sleep" {
+            sleep_mode()
         } else if OPTION == "-n" || OPTION == "-on" {
             turn_on()
         } else if OPTION == "-v" || OPTION == "-version" || OPTION == "--version" {
