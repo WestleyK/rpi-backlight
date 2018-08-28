@@ -2,7 +2,7 @@
 // email: westley@sylabs.io
 // Date: Aug 27, 2018
 // https://github.com/WestleyK/rpi-backlight
-// Version-1.0.4
+// Version-1.0.5
 //
 // Designed and tested for raspberry pi with official 7 inch touchdcreen. 
 //
@@ -44,7 +44,7 @@ import (
     "io/ioutil"
 )
 
-var SCRIPT_VERSION = "version-1.0.4"
+var SCRIPT_VERSION = "version-1.0.5"
 var SCRIPT_DATE = "Date: Aug 27, 2018"
 
 var MIN_BRIGHTNESS = "15"
@@ -65,7 +65,7 @@ func help_menu() {
     fmt.Print("      -d | -down (adjust brightness down by: ", ADJUST_DOWN, "/", MAX_BRIGHTNESS, ")\n")
     fmt.Print("      -c | -current (print current brightness)\n")
     fmt.Print("      -n | -on (turn backlight on to: ", DEFAULT_ON, "\n")
-    fmt.Print("      -info | --info (print info)\n")
+    fmt.Print("      -i | -info (print info)\n")
     fmt.Print("      -version | --version (print version)\n")
     fmt.Print("Source code: https://github.com/WestleyK/rpi-backlight\n")
     os.Exit(0)
