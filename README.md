@@ -42,6 +42,22 @@ cd rpi-backlight/pre-compiled/
 sudo ./make.sh install
 ```
 
+### Install with one line:
+
+Paste this in the terminal:
+```
+sudo curl https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/one-line-install.sh | sh
+```
+If you don't use `sudo` when installing from above method, then do:
+
+```
+sudo mv rpi-backlight /usr/local/bin/
+```
+To finish the install.
+
+**NOTE:** this will install the pre-compiled source code.
+
+<br>
 <br>
 
 ### Update:
