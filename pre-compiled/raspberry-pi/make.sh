@@ -2,7 +2,7 @@
 # Created by: Westley K
 # email: westley@sylabs.io
 # Date: Aug 27, 2018
-# version-1.0.0
+# version-1.0.1
 # https://github.com/WestleyK/rpi-backlight
 #
 # MIT License
@@ -27,7 +27,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-
 
 SCRIPT_VERSION="version-1.0.0"
 SCRIPT_DATE="Aug 26, 2018"
@@ -140,7 +139,6 @@ uninstall_script() {
 	exit 0
 }
 
-# is there a argument, than what is it?
 if [ ! -z $OPTION ]; then
 	if [ "$OPTION" = "help" ]; then
 		help_menu
@@ -162,10 +160,6 @@ else
 	help_menu
 fi
 
-
-
 #
 # End install script
 #
-
-
