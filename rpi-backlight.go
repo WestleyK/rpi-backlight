@@ -1,8 +1,8 @@
 // Created by: Westley K
 // email: westley@sylabs.io
-// Date: Aug 27, 2018
+// Date: Aug 28, 2018
 // https://github.com/WestleyK/rpi-backlight
-// Version-1.0.5
+// Version-1.0.8
 //
 // Designed and tested for raspberry pi with official 7 inch touchdcreen. 
 //
@@ -44,8 +44,8 @@ import (
     "io/ioutil"
 )
 
-var SCRIPT_VERSION = "version-1.0.5"
-var SCRIPT_DATE = "Date: Aug 27, 2018"
+var SCRIPT_VERSION = "version-1.0.8"
+var SCRIPT_DATE = "Date: Aug 28, 2018"
 
 var MIN_BRIGHTNESS = "15"
 var MAX_BRIGHTNESS = "255"
@@ -60,6 +60,7 @@ var BRIGHT = ""
 func help_menu() {
     fmt.Print("Usage: rpi-backlight [OPTION]\n")
     fmt.Print("      -help | --help (print help menu)\n")
+    fmt.Print("      [", MIN_BRIGHTNESS, "-", MAX_BRIGHTNESS, "] (adjust from: ", MIN_BRIGHTNESS, " to: ", MAX_BRIGHTNESS, ")\n")
     fmt.Print("      -s | -sleep (enter sleep mode, press <ENTER> to exit this mode)\n")
     fmt.Print("      -u | -up (adjust brightness up by: ", ADJUST_UP, "/", MAX_BRIGHTNESS, ")\n")
     fmt.Print("      -d | -down (adjust brightness down by: ", ADJUST_DOWN, "/", MAX_BRIGHTNESS, ")\n")
@@ -113,18 +114,14 @@ func sleep_mode() {
     defer file.Close()
     fmt.Fprintf(file, "1")
 
-    //if errF != nil {
-    //    fmt.Println(errF)
-    //}
-
     reader := bufio.NewReader(os.Stdin)
     text, _ := reader.ReadString('\n')
-    fmt.Println(text)
+    if text == "" {
+        // nothing
+    }
 
     fmt.Fprintf(file, "0")
-    //if errN != nil {
-    //    fmt.Println(errN)
-    //}
+
     os.Exit(0)
 }
 
@@ -226,6 +223,31 @@ func turn_on() {
     os.Exit(0)
 }
 
+func adjust_bright() {
+    // check if theres a '-'
+    if strings.Contains(BRIGHT, "-") {
+        fmt.Print("Only whole numbers! ", BRIGHT, "\n")
+        os.Exit(1)
+
+    }
+
+    // convert strings to int
+    CURRENT, _ := strconv.Atoi(BRIGHT)
+    MIN_BRIGHTNESS, _ := strconv.Atoi(MIN_BRIGHTNESS)
+    MAX_BRIGHTNESS, _ := strconv.Atoi(MAX_BRIGHTNESS)
+
+    // check if in range
+    if CURRENT >= MIN_BRIGHTNESS && CURRENT <= MAX_BRIGHTNESS {
+        BRIGHT = strconv.Itoa(CURRENT)
+        write_file()
+        os.Exit(0)
+    }
+
+    fmt.Print("Not a valid number: ", CURRENT, "\n")
+    fmt.Print("Your options: [", MIN_BRIGHTNESS, "-", MAX_BRIGHTNESS, "]\n")
+    os.Exit(0)
+}
+
 func main() {
 
     if len(os.Args[1:]) >= 1 {
@@ -254,6 +276,9 @@ func main() {
             info_script()
         } else if OPTION == "-v" || OPTION == "-version" || OPTION == "--version" {
             script_version()
+        } else if _, err := strconv.Atoi(OPTION); err == nil {
+            BRIGHT = OPTION
+            adjust_bright()
         } else {
             fmt.Print("Option not found!  :P  ", OPTION, "\n")
             fmt.Print("Try:  $ rpi-backlight -help  (for help)\n")
