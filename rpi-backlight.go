@@ -2,7 +2,7 @@
 // email: westley@sylabs.io
 // Date: Aug 27, 2018
 // https://github.com/WestleyK/rpi-backlight
-// Version-1.0.2
+// Version-1.0.3
 //
 // Designed and tested for raspberry pi with official 7 inch touchdcreen. 
 //
@@ -40,10 +40,11 @@ import (
     "strconv"
     "time"
     "bufio"
+    "strings"
     "io/ioutil"
 )
 
-var SCRIPT_VERSION = "version-1.0.2"
+var SCRIPT_VERSION = "version-1.0.3"
 var SCRIPT_DATE = "Date: Aug 27, 2018"
 
 var MIN_BRIGHTNESS = "15"
@@ -103,7 +104,8 @@ func write_file() {
         fmt.Print("File does not exist:\n", BRIGHTNESS_FILE)
         os.Exit(1)
     }
-    err := ioutil.WriteFile(BRIGHTNESS_FILE, []byte(BRIGHT), 0644)
+    file, err := os.Create(BRIGHTNESS_FILE)
+    //err := ioutil.WriteFile(BRIGHTNESS_FILE, []byte(BRIGHT), 0644)
     if err != nil {
         if os.IsPermission(err) {
             fmt.Println("Unable to write to ", BRIGHTNESS_FILE)
@@ -113,6 +115,8 @@ func write_file() {
         fmt.Println(err)
         os.Exit(1)
     }
+    defer file.Close()
+    fmt.Fprintf(file, BRIGHT)
     fmt.Print("Current brightness: ", BRIGHT, "\n")
     os.Exit(0)
 }
@@ -125,6 +129,7 @@ func adjust_up() {
 
     CURRENT_STRING := string(b)
 
+    CURRENT_STRING = strings.TrimSuffix(CURRENT_STRING, "\n")
     CURRENT, err := strconv.Atoi(CURRENT_STRING)
     ADJUST_UP, err := strconv.Atoi(ADJUST_UP)
     MAX_BRIGHTNESS, err := strconv.Atoi(MAX_BRIGHTNESS)
@@ -146,6 +151,7 @@ func adjust_down() {
 
     CURRENT_STRING := string(b)
 
+    CURRENT_STRING = strings.TrimSuffix(CURRENT_STRING, "\n")
     CURRENT, err := strconv.Atoi(CURRENT_STRING)
     ADJUST_DOWN, err := strconv.Atoi(ADJUST_DOWN)
     MIN_BRIGHTNESS, err := strconv.Atoi(MIN_BRIGHTNESS)
