@@ -2,7 +2,7 @@
 // email: westley@sylabs.io
 // Date: Aug 28, 2018
 // https://github.com/WestleyK/rpi-backlight
-// Version-1.1.0
+// Version-1.1.2
 //
 // Designed and tested for raspberry pi with official 7 inch touchdcreen. 
 //
@@ -44,7 +44,7 @@ import (
     "io/ioutil"
 )
 
-var SCRIPT_VERSION = "version-1.1.0"
+var SCRIPT_VERSION = "version-1.1.2"
 var SCRIPT_DATE = "Date: Aug 28, 2018"
 
 var MIN_BRIGHTNESS = "15"
@@ -128,12 +128,8 @@ func is_power_file() {
     defer file.Close()
 }
 
-func sleep_mode() {
-    is_power_file()
-
-    fmt.Print("Press <ENTER> to exit this mode:\n")
-    time.Sleep(1 * time.Second)
-    file, err := os.Create(POWER_FILE)
+func is_power_file_perm() {
+    file_perm, err := os.Create(POWER_FILE)
     if err != nil {
         if os.IsPermission(err) {
             fmt.Print("\033[0;31mERROR: \033[0m")
@@ -145,16 +141,42 @@ func sleep_mode() {
         fmt.Println(err)
         os.Exit(1)
     }
-    defer file.Close()
-    fmt.Fprintf(file, "1")
+    defer file_perm.Close()
+}
 
+func sleep_mode() {
+    is_power_file()
+    is_power_file_perm()
+
+    // sleep 1s, then write 1 to POWER_FILE
+    fmt.Print("Press <ENTER> to exit this mode:\n")
+    time.Sleep(1 * time.Second)
+    file_off, err := os.Create(POWER_FILE)
+    if err != nil {
+        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Println(err)
+        os.Exit(1)
+    }
+    defer file_off.Close()
+    // write 1 to POWER_FILE
+    fmt.Fprintf(file_off, "1")
+
+    // wait until user presses <ENTER>
     reader := bufio.NewReader(os.Stdin)
     text, _ := reader.ReadString('\n')
-    if text == "" {
-        // nothing
-    }
+    // do nothing with the text
+    _ = text
 
-    fmt.Fprintf(file, "0")
+    // then reopen the file, and write 0 to POWER_FILE
+    file_on, err := os.Create(POWER_FILE)
+    if err != nil {
+        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Println(err)
+        os.Exit(1)
+    }
+    defer file_on.Close()
+    // write 0 to POWER_FILE
+    fmt.Fprintf(file_on, "0")
 
     os.Exit(0)
 }
@@ -204,9 +226,9 @@ func adjust_up() {
     CURRENT_STRING := string(b)
 
     CURRENT_STRING = strings.TrimSuffix(CURRENT_STRING, "\n")
-    CURRENT, err := strconv.Atoi(CURRENT_STRING)
-    ADJUST_UP, err := strconv.Atoi(ADJUST_UP)
-    MAX_BRIGHTNESS, err := strconv.Atoi(MAX_BRIGHTNESS)
+    CURRENT, _ := strconv.Atoi(CURRENT_STRING)
+    ADJUST_UP, _ := strconv.Atoi(ADJUST_UP)
+    MAX_BRIGHTNESS, _ := strconv.Atoi(MAX_BRIGHTNESS)
 
     CURRENT += ADJUST_UP
     if CURRENT >= MAX_BRIGHTNESS {
@@ -229,9 +251,9 @@ func adjust_down() {
     CURRENT_STRING := string(b)
 
     CURRENT_STRING = strings.TrimSuffix(CURRENT_STRING, "\n")
-    CURRENT, err := strconv.Atoi(CURRENT_STRING)
-    ADJUST_DOWN, err := strconv.Atoi(ADJUST_DOWN)
-    MIN_BRIGHTNESS, err := strconv.Atoi(MIN_BRIGHTNESS)
+    CURRENT, _ := strconv.Atoi(CURRENT_STRING)
+    ADJUST_DOWN, _ := strconv.Atoi(ADJUST_DOWN)
+    MIN_BRIGHTNESS, _ := strconv.Atoi(MIN_BRIGHTNESS)
 
     CURRENT -= ADJUST_DOWN
     if CURRENT <= MIN_BRIGHTNESS {
@@ -247,23 +269,23 @@ func turn_on() {
     is_write()
     is_power_file()
 
-    file, err := os.Create(BRIGHTNESS_FILE)
+    file_bright, err := os.Create(BRIGHTNESS_FILE)
     if err != nil {
         fmt.Print("\033[0;31mERROR: \033[0m")
         fmt.Println(err)
         os.Exit(1)
     }
-    defer file.Close()
-    fmt.Fprintf(file, DEFAULT_ON)
+    defer file_bright.Close()
+    fmt.Fprintf(file_bright, DEFAULT_ON)
 
-    file, errP := os.Create(POWER_FILE)
-    if errP != nil {
+    file_power, err := os.Create(POWER_FILE)
+    if err != nil {
         fmt.Print("\033[0;31mERROR: \033[0m")
-        fmt.Println(errP)
+        fmt.Println(err)
         os.Exit(1)
     }
-    defer file.Close()
-    fmt.Fprintf(file, "0")
+    defer file_power.Close()
+    fmt.Fprintf(file_power, "0")
     os.Exit(0)
 }
 
