@@ -68,6 +68,23 @@ sudo rm /usr/local/bin/rpi-backlight
 <br>
 <br>
 
+## Usage:
+
+```
+pi@raspberrypi:~ $ rpi-backlight -help
+Usage: rpi-backlight [OPTION]
+      -help | --help (print help menu)
+      -s | -sleep (enter sleep mode, press <ENTER> to exit this mode)
+      -u | -up (adjust brightness up by: 25/255)
+      -d | -down (adjust brightness down by: 25/255)
+      -c | -current (print current brightness)
+      -n | -on (turn backlight on to: 180
+      -i | -info (print info)
+      -version | --version (print version)
+Source code: https://github.com/WestleyK/rpi-backlight
+pi@raspberrypi:~ $ 
+```
+
 
 ### End README
 
