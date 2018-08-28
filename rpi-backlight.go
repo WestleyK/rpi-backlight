@@ -2,7 +2,7 @@
 // email: westley@sylabs.io
 // Date: Aug 27, 2018
 // https://github.com/WestleyK/rpi-backlight
-// Version-1.0.3
+// Version-1.0.4
 //
 // Designed and tested for raspberry pi with official 7 inch touchdcreen. 
 //
@@ -44,7 +44,7 @@ import (
     "io/ioutil"
 )
 
-var SCRIPT_VERSION = "version-1.0.3"
+var SCRIPT_VERSION = "version-1.0.4"
 var SCRIPT_DATE = "Date: Aug 27, 2018"
 
 var MIN_BRIGHTNESS = "15"
@@ -60,8 +60,11 @@ var BRIGHT = ""
 func help_menu() {
     fmt.Print("Usage: rpi-backlight [OPTION]\n")
     fmt.Print("      -help | --help (print help menu)\n")
+    fmt.Print("      -s | -sleep (enter sleep mode, press <ENTER> to exit this mode)\n")
     fmt.Print("      -u | -up (adjust brightness up by: ", ADJUST_UP, "/", MAX_BRIGHTNESS, ")\n")
     fmt.Print("      -d | -down (adjust brightness down by: ", ADJUST_DOWN, "/", MAX_BRIGHTNESS, ")\n")
+    fmt.Print("      -c | -current (print current brightness)\n")
+    fmt.Print("      -n | -on (turn backlight on to: ", DEFAULT_ON, "\n")
     fmt.Print("      -info | --info (print info)\n")
     fmt.Print("      -version | --version (print version)\n")
     fmt.Print("Source code: https://github.com/WestleyK/rpi-backlight\n")
@@ -79,39 +82,81 @@ func info_script() {
     os.Exit(0)
 }
 
+func is_bright_file() {
+    if _, err := os.Stat(BRIGHTNESS_FILE); os.IsNotExist(err) {
+        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Print("File does not exist:\n", BRIGHTNESS_FILE, "\n")
+        os.Exit(1)
+    }
+}
+
 func sleep_mode() {
+    if _, err := os.Stat(POWER_FILE); os.IsNotExist(err) {
+        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Print("File does not exist:\n", POWER_FILE, "\n")
+        os.Exit(1)
+    }
     fmt.Print("Press <ENTER> to exit this mode:\n")
     time.Sleep(1 * time.Second)
-    errF := ioutil.WriteFile(POWER_FILE, []byte("1"), 0644)
-    if errF != nil {
-        fmt.Println(errF)
+    file, err := os.Create(POWER_FILE)
+    if err != nil {
+        if os.IsPermission(err) {
+            fmt.Print("\033[0;31mERROR: \033[0m")
+            fmt.Print("Unable to write to: ", POWER_FILE, "\n")
+            fmt.Println(err)
+            os.Exit(1)
+        }
+        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Println(err)
+        os.Exit(1)
     }
+    defer file.Close()
+    fmt.Fprintf(file, "1")
 
+    //if errF != nil {
+    //    fmt.Println(errF)
+    //}
 
     reader := bufio.NewReader(os.Stdin)
     text, _ := reader.ReadString('\n')
     fmt.Println(text)
 
-    errN := ioutil.WriteFile(POWER_FILE, []byte("0"), 0644)
-    if errN != nil {
-        fmt.Println(errN)
+    fmt.Fprintf(file, "0")
+    //if errN != nil {
+    //    fmt.Println(errN)
+    //}
+    os.Exit(0)
+}
+
+func current_bright() {
+    is_bright_file()
+
+    b, err := ioutil.ReadFile(BRIGHTNESS_FILE)
+    if err != nil {
+        fmt.Print(err)
     }
+
+    CURRENT_STRING := string(b)
+
+    CURRENT_STRING = strings.TrimSuffix(CURRENT_STRING, "\n")
+    CURRENT, err := strconv.Atoi(CURRENT_STRING)
+
+    fmt.Print("Current brightness: ", CURRENT, "\n")
     os.Exit(0)
 }
 
 func write_file() {
-    if _, err := os.Stat(BRIGHTNESS_FILE); os.IsNotExist(err) {
-        fmt.Print("File does not exist:\n", BRIGHTNESS_FILE)
-        os.Exit(1)
-    }
+    is_bright_file()
+
     file, err := os.Create(BRIGHTNESS_FILE)
-    //err := ioutil.WriteFile(BRIGHTNESS_FILE, []byte(BRIGHT), 0644)
     if err != nil {
         if os.IsPermission(err) {
-            fmt.Println("Unable to write to ", BRIGHTNESS_FILE)
+            fmt.Print("\033[0;31mERROR: \033[0m")
+            fmt.Print("Unable to write to: ", BRIGHTNESS_FILE, "\n")
             fmt.Println(err)
             os.Exit(1)
         }
+        fmt.Print("\033[0;31mERROR: \033[0m")
         fmt.Println(err)
         os.Exit(1)
     }
@@ -122,9 +167,11 @@ func write_file() {
 }
 
 func adjust_up() {
+    is_bright_file()
     b, err := ioutil.ReadFile(BRIGHTNESS_FILE)
     if err != nil {
-        fmt.Print(err)
+        fmt.Print(err, "\n")
+        os.Exit(1)
     }
 
     CURRENT_STRING := string(b)
@@ -144,9 +191,11 @@ func adjust_up() {
 }
 
 func adjust_down() {
+    is_bright_file()
     b, err := ioutil.ReadFile(BRIGHTNESS_FILE)
     if err != nil {
-        fmt.Print(err)
+        fmt.Print(err, "\n")
+        os.Exit(1)
     }
 
     CURRENT_STRING := string(b)
@@ -197,6 +246,8 @@ func main() {
             adjust_down()
         } else if OPTION == "-s" || OPTION == "-sleep" {
             sleep_mode()
+        } else if OPTION == "-c" || OPTION == "-current" {
+            current_bright()
         } else if OPTION == "-n" || OPTION == "-on" {
             turn_on()
         } else if OPTION == "-i" || OPTION == "-info" {
@@ -209,6 +260,7 @@ func main() {
             os.Exit(1)
         }
     }
+    current_bright()
 
 }
 
