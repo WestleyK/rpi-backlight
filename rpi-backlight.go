@@ -2,7 +2,7 @@
 // email: westley@sylabs.io
 // Date: Aug 27, 2018
 // https://github.com/WestleyK/rpi-backlight
-// Version-1.0.1
+// Version-1.0.2
 //
 // Designed and tested for raspberry pi with official 7 inch touchdcreen. 
 //
@@ -43,7 +43,7 @@ import (
     "io/ioutil"
 )
 
-var SCRIPT_VERSION = "version-1.0.1"
+var SCRIPT_VERSION = "version-1.0.2"
 var SCRIPT_DATE = "Date: Aug 27, 2018"
 
 var MIN_BRIGHTNESS = "15"
@@ -51,8 +51,8 @@ var MAX_BRIGHTNESS = "255"
 var DEFAULT_ON = "180"
 var ADJUST_UP = "25"
 var ADJUST_DOWN = "25"
-var BRIGHTNESS_FILE = "brightness"
-var POWER_FILE = "power"
+var BRIGHTNESS_FILE = "/sys/class/backlight/rpi_backlight/brightness"
+var POWER_FILE = "/sys/class/backlight/rpi_backlight/bl_power"
 
 var BRIGHT = ""
 
@@ -70,6 +70,11 @@ func help_menu() {
 func script_version() {
     fmt.Println(SCRIPT_VERSION)
     fmt.Println(SCRIPT_DATE)
+    os.Exit(0)
+}
+
+func info_script() {
+    info()
     os.Exit(0)
 }
 
@@ -188,6 +193,8 @@ func main() {
             sleep_mode()
         } else if OPTION == "-n" || OPTION == "-on" {
             turn_on()
+        } else if OPTION == "-i" || OPTION == "-info" {
+            info_script()
         } else if OPTION == "-v" || OPTION == "-version" || OPTION == "--version" {
             script_version()
         } else {
