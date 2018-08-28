@@ -2,7 +2,7 @@
 # Created by: Westley K
 # email: westley@sylabs.io
 # Date: Aug 27, 2018
-# version-1.0.3
+# version-1.0.4
 # https://github.com/WestleyK/rpi-backlight
 #
 # MIT License
@@ -17,7 +17,7 @@ INSTALL_PATH="/usr/local/bin/"
 KERNEL_VERSION="4.14.50-v7+"
 
 echo "Install script version:"
-echo "version-1.0.3"
+echo "version-1.0.4"
 
 KERNEL=` uname -r `
 if [ "$KERNEL" != "$KERNEL_VERSION" ]; then
@@ -26,13 +26,17 @@ if [ "$KERNEL" != "$KERNEL_VERSION" ]; then
     echo "Supported kernel version: $KERNEL_VERSION"
     echo 
     echo "Install failed!"
-    //exit 1
+    exit 1
 fi
 
 wget $SCRIPT_URL
 mv rpi-backlight?raw=true $SCRIPT_NAME
 chmod +x $SCRIPT_NAME
-mv $SCRIPT_NAME $INSTALL_PATH
+mv -f $SCRIPT_NAME $INSTALL_PATH
+
+echo 
+echo "########## rpi-backlight installed to /usr/local/bin/ ##########"
+echo
 
 #
 # End install script
