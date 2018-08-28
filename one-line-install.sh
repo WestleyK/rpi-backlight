@@ -26,7 +26,7 @@ if [ "$KERNEL" != "$KERNEL_VERSION" ]; then
     echo "Supported kernel version: $KERNEL_VERSION"
     echo 
     echo "Install failed!"
-    exit 1
+    //exit 1
 fi
 
 wget $SCRIPT_URL
