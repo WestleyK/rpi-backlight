@@ -20,6 +20,27 @@ cd rpi-backlight/
 make
 sudo make install
 ```
+<br>
+
+### Installing pre-compiled code:
+
+Why install pre-compiled:
+ - No dependency needed to install, (not that there is any).
+ - You don't need golang to compile the source code.
+
+Why not to install pre-compiled code:
+ - May not be fully compatible, (could only be partially compatible)
+ - And many more reasons!
+<br>
+
+```
+cd ~/
+mkdir raspberrypi-backlight
+cd raspberrypi-backlight/
+git clone https://github.com/WestleyK/rpi-backlight
+cd rpi-backlight/pre-compiled/
+sudo ./make.sh install
+```
 
 <br>
 
