@@ -2,7 +2,7 @@
 // email: westley@sylabs.io
 // Date: Aug 28, 2018
 // https://github.com/WestleyK/rpi-backlight
-// Version-1.0.8
+// Version-1.0.9
 //
 // Designed and tested for raspberry pi with official 7 inch touchdcreen. 
 //
@@ -44,7 +44,7 @@ import (
     "io/ioutil"
 )
 
-var SCRIPT_VERSION = "version-1.0.8"
+var SCRIPT_VERSION = "version-1.0.9"
 var SCRIPT_DATE = "Date: Aug 28, 2018"
 
 var MIN_BRIGHTNESS = "15"
