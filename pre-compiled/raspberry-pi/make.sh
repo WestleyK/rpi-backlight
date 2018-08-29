@@ -1,15 +1,15 @@
 #!/bin/sh
 # Created by: Westley K
 # email: westley@sylabs.io
-# Date: Aug 27, 2018
-# version-1.0.1
+# Date: Aug 29, 2018
+# version-1.0.2
 # https://github.com/WestleyK/rpi-backlight
 #
 # MIT License
 #
 
-SCRIPT_VERSION="version-1.0.0"
-SCRIPT_DATE="Aug 26, 2018"
+SCRIPT_VERSION="version-1.0.2"
+SCRIPT_DATE="Aug 29, 2018"
 
 # the name of the script to install,
 SCRIPT_NAME="rpi-backlight"
@@ -26,7 +26,6 @@ help_menu() {
 	echo "Usage: ./make.sh [OPTION]"
 	echo "      help (print help menu)"
 	echo "      install (install: $SCRIPT_NAME to: $PATH_INSTALL)"
-	echo "      update (update command and repo)"
 	echo "      uninstall (uninstall: $SCRIPT_NAME from: $PATH_INSTALL)"
 	echo "      info (print info)"
 	echo "      version (print version of install script)"
@@ -58,7 +57,7 @@ kernel_version() {
     # supported for: 4.14.50-v7+
     KERNEL_V=` uname -r `
     if [ "$KERNEL_V" != "$SUP_KER" ]; then
-        printf "\033[0;31mABORTING!\033[0m\n"
+        printf "\033[0;31mFATAL ERROR: \033[0m"
         echo "Kernel wrong version!"
         echo "Supported version: $SUP_KER"
         echo "Your version: $KERNEL_V"
@@ -83,7 +82,7 @@ install_script() {
 		if [ "$INPUT" = "y" ] || [ "$INPUT" = "Y" ]; then
 			echo "Overriding existing file..."
 		else
-            printf "\033[0;31mABORTING!\033[0m\n"
+			printf "\033[0;31mABORTING!\033[0m\n"
 			echo "Install failed."
 			exit 1
 		fi
@@ -101,20 +100,13 @@ install_script() {
 	exit 0
 }
 
-update_script() {
-	is_sudo
-	echo "Updating..."
-	git pull origin master
-	install_script
-}
-
 uninstall_script() {
 	if [ ! -e $INSTALL_PATH$SCRIPT_NAME ]; then
 		echo "$SCRIPT_NAME is not installed :O"
 		exit 1
 	fi
 	echo "Uninstalling" $SCRIPT_NAME "from" $PATH_INSTALL
-	rm $PATH_INSTALL$SCRIPT_NAME
+	rm -f $PATH_INSTALL$SCRIPT_NAME
 	echo "Done."
 	exit 0
 }
@@ -124,8 +116,6 @@ if [ ! -z $OPTION ]; then
 		help_menu
 	elif [ "$OPTION" = "install" ]; then
 		install_script
-	elif [ "$OPTION" = "update" ]; then
-		update_script
 	elif [ "$OPTION" = "uninstall" ]; then
 		uninstall_script
 	elif [ "$OPTION" = "info" ]; then
