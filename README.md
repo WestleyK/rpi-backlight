@@ -39,6 +39,7 @@ Paste this in your terminal:
 curl https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/one-line-install.sh | sh
 ```
 This will install `rpi-backlight` to the current directory.
+
 To finish the install, do:
 ```
 sudo mv rpi-backlight /usr/local/bin/
