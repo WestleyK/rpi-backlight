@@ -2,9 +2,9 @@
 #
 # Created by: Westley K
 # email: westley@sylabs.io
-# Date: Aug 27, 2018
+# Date: Aug 29, 2018
 # https://github.com/WestleyK/rpi-backlight
-# Version-1.0.0
+# Version-1.0.1
 #
 # Designed and tested for raspberry pi with official 7 inch touchdcreen. 
 #
@@ -40,6 +40,7 @@ DATE=` date `
 WHO=` whoami `
 ON=` hostname `
 WHERE=` pwd `
+KERN=` uname -r `
 
 touch $FILE_INFO
 cat /dev/null > $FILE_INFO
@@ -55,6 +56,7 @@ func info() {
     fmt.Print("Compiled by: $WHO\n")
     fmt.Print("Compiled on: $ON\n")
     fmt.Print("Compiled in: $WHERE\n")
+    fmt.Print("Compiled on kernel: $KERN\n")
 }
 
 
