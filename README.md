@@ -73,7 +73,7 @@ sudo make install
 
 ```
 cd ~/raspberrypi-backlight/rpi-backlight/
-make uninstall
+sudo make uninstall
 ```
 Or uninstall manualy:
 ```
