@@ -9,7 +9,7 @@
 
 <br>
 
-### Install:
+### Install the source code:
 
 ```
 cd ~/
@@ -44,10 +44,11 @@ sudo ./make.sh install
 
 ### Install with one line:
 
-Paste this in the terminal:
+Paste this in your terminal:
 ```
 curl https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/one-line-install.sh | sh
 ```
+This will install `rpi-backlight` to the current directory.
 To finish the install, do:
 ```
 sudo mv rpi-backlight /usr/local/bin/
@@ -65,7 +66,6 @@ cd ~/raspberrypi-backlight/rpi-backlight/
 make update
 sudo make install
 ```
-
 <br>
 
 ### Uninstall:
