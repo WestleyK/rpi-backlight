@@ -2,7 +2,7 @@
 # Created by: Westley K
 # email: westley@sylabs.io
 # Date: Aug 29, 2018
-# version-1.0.6
+# version-1.0.8
 # https://github.com/WestleyK/rpi-backlight
 #
 # MIT License
@@ -13,32 +13,36 @@ set -e
 SCRIPT_URL="https://github.com/WestleyK/rpi-backlight/blob/master/pre-compiled/raspberry-pi/rpi-backlight?raw=true"
 SCRIPT_NAME="rpi-backlight"
 INSTALL_PATH="/usr/local/bin/"
-KERNEL_VERSION="4.14.50-v7+"
+ARCH_VERSION="armv7l"
 
-echo "Install script version: version-1.0.6"
+echo "Install script version: version-1.0.8"
 echo 
 
-KERNEL=` uname -r `
-if [ "$KERNEL" != "$KERNEL_VERSION" ]; then
+ARCH_ON=` uname -m `
+if [ "$ARCH_ON" != "$ARCH_VERSION" ]; then
     printf "\033[0;31mFATAL ERROR: \033[0m"
-    echo "Kernel not supported!"
-    echo "Supported kernel version: $KERNEL_VERSION"
-    echo "Your kernel version: $KERNEL"
+    echo "Architecture not supported!"
+    echo "Supported architecture version: $ARCH_VERSION"
+    echo "Your architecture version: $ARCH_ON"
     echo 
-    echo "!!FAIL: Install failed!"
+    echo "FAIL: Install failed!"
     exit 1
 fi
 
 echo "Downloading file..."
-wget -O $SCRIPT_NAME $SCRIPT_URL >/dev/null 2>&1
+wget -O $SCRIPT_NAME $SCRIPT_URL
 chmod +x $SCRIPT_NAME
 
-echo "!!SUCCESS: install successful."
 echo 
-echo "########## rpi-backlight installed to the current directory  ##########"
+echo
+echo
+echo "SUCCESS: install successful."
+echo 
+echo "########## $SCRIPT_NAME installed to the current directory  ##########"
 echo
 echo ">> To finish the install, do:"
 echo " $ sudo mv rpi-backlight /usr/local/bin/"
+exit 0
 
 #
 # End install script
