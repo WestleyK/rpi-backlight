@@ -1,8 +1,17 @@
 # Simple backlight adjust and low power mode
 
-<br>
+Designed and tested for raspberry pi with official 7 inch touchscreen. 
+
 <br>
 
+Other script that do the same thing:
+ - c: https://github.com/WestleyK/rpi-brightness
+ - perl: https://github.com/WestleyK/pi-backlight
+ - bash/shell: https://github.com/WestleyK/backlight
+
+<br>
+
+<br>
 
 
 ## Install, Update and Uninstall:
