@@ -1,24 +1,21 @@
 #!/bin/sh
 # Created by: Westley K
 # email: westley@sylabs.io
-# Date: Aug 29, 2018
-# version-1.0.2
+# Date: Aug 30, 2018
+# version-1.0.3
 # https://github.com/WestleyK/rpi-backlight
 #
 # MIT License
 #
 
-SCRIPT_VERSION="version-1.0.2"
-SCRIPT_DATE="Aug 29, 2018"
+SCRIPT_VERSION="version-1.0.3"
+SCRIPT_DATE="Aug 30, 2018"
 
-# the name of the script to install,
 SCRIPT_NAME="rpi-backlight"
 
-# the place where the script will be installed
 PATH_INSTALL="/usr/local/bin/"
 
-# supported for kernel version
-SUP_KER="4.14.50-v7+"
+SUP_ARCH="armv7l"
 
 OPTION=$1
 
@@ -34,7 +31,7 @@ help_menu() {
 }
 
 info() {
-    echo "Supported for kernel version: $SUP_KER"
+    echo "Supported for arch: $SUP_ARCH"
     exit 0
 }
 
@@ -53,14 +50,14 @@ is_sudo() {
 	fi
 }
 
-kernel_version() {
-    # supported for: 4.14.50-v7+
-    KERNEL_V=` uname -r `
-    if [ "$KERNEL_V" != "$SUP_KER" ]; then
+arch_version() {
+    # supported for: arm7l
+    ARCH_V=` uname -m `
+    if [ "$ARCH_V" != "$SUP_ARCH" ]; then
         printf "\033[0;31mFATAL ERROR: \033[0m"
         echo "Kernel wrong version!"
-        echo "Supported version: $SUP_KER"
-        echo "Your version: $KERNEL_V"
+        echo "Supported version: $SUP_ARCH"
+        echo "Your version: $ARCH_V"
         echo "Install failed."
         exit 1
     fi
@@ -87,9 +84,9 @@ install_script() {
 			exit 1
 		fi
 	fi
-    echo "Checking kernel version..."
-    kernel_version
-    echo "Kernel version: $KERNEL_V"
+    echo "Checking architecture..."
+    arch_version
+    echo "Your architecture: $ARCH_V"
 	echo "Installing: $SCRIPT_NAME"
 	chmod +x $SCRIPT_NAME
 	cp $SCRIPT_NAME $PATH_INSTALL
