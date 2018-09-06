@@ -71,11 +71,23 @@ sudo ./make.sh install
 
 ### Update:
 
+Update the repo:
 ```
 cd ~/raspberrypi-backlight/rpi-backlight/
 make update
+make
 sudo make install
 ```
+
+Or just update the binary:
+
+```
+curl https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/easy-install.sh | sh
+sudo mv -f rpi-backlight /usr/local/bin/
+```
+Basically the same commands as installing the binary.
+
+
 <br>
 
 ### Uninstall:
