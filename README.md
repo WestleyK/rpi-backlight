@@ -1,8 +1,17 @@
 # Simple backlight adjust and low power mode
 
-<br>
+Designed and tested for raspberry pi with official 7 inch touchscreen. 
+
 <br>
 
+Other script that do the same thing:
+ - c: https://github.com/WestleyK/rpi-brightness
+ - perl: https://github.com/WestleyK/pi-backlight
+ - bash/shell: https://github.com/WestleyK/backlight
+
+<br>
+
+<br>
 
 
 ## Install, Update and Uninstall:
@@ -36,7 +45,7 @@ sudo make install
 
 Paste this in your terminal:
 ```
-curl https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/one-line-install.sh | sh
+curl https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/easy-install.sh | sh
 ```
 This will install `rpi-backlight` to the current directory.
 
@@ -62,11 +71,23 @@ sudo ./make.sh install
 
 ### Update:
 
+Update the repo:
 ```
 cd ~/raspberrypi-backlight/rpi-backlight/
 make update
+make
 sudo make install
 ```
+
+Or just update the binary:
+
+```
+curl https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/easy-install.sh | sh
+sudo mv -f rpi-backlight /usr/local/bin/
+```
+Basically the same commands as installing the binary.
+
+
 <br>
 
 ### Uninstall:

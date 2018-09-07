@@ -1,8 +1,8 @@
 #!/bin/sh
 # Created by: Westley K
 # email: westley@sylabs.io
-# Date: Aug 29, 2018
-# version-1.0.8
+# Date: Aug 31, 2018
+# version-1.0.9
 # https://github.com/WestleyK/rpi-backlight
 #
 # MIT License
@@ -10,12 +10,12 @@
 
 set -e
 
-SCRIPT_URL="https://github.com/WestleyK/rpi-backlight/blob/master/pre-compiled/raspberry-pi/rpi-backlight?raw=true"
+SCRIPT_URL="https://github.com/WestleyK/rpi-backlight/raw/master/pre-compiled/raspberry-pi/rpi-backlight"
 SCRIPT_NAME="rpi-backlight"
 INSTALL_PATH="/usr/local/bin/"
 ARCH_VERSION="armv7l"
 
-echo "Install script version: version-1.0.8"
+echo "Install script version: version-1.0.9"
 echo 
 
 ARCH_ON=` uname -m `
