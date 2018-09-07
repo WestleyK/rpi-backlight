@@ -1,8 +1,8 @@
 // Created by: Westley K
 // email: westley@sylabs.io
-// Date: Aug 28, 2018
+// Date: Sep 7, 2018
 // https://github.com/WestleyK/rpi-backlight
-// Version-1.1.2
+// Version-1.1.3
 //
 // Designed and tested for raspberry pi with official 7 inch touchdcreen. 
 //
@@ -44,18 +44,27 @@ import (
     "io/ioutil"
 )
 
-var SCRIPT_VERSION = "version-1.1.2"
-var SCRIPT_DATE = "Date: Aug 28, 2018"
+var (
+    SCRIPT_VERSION string = "version-1.1.3"
+    SCRIPT_DATE string = "Date: Sep 7, 2018"
 
-var MIN_BRIGHTNESS = "15"
-var MAX_BRIGHTNESS = "255"
-var DEFAULT_ON = "180"
-var ADJUST_UP = "25"
-var ADJUST_DOWN = "25"
-var BRIGHTNESS_FILE = "/sys/class/backlight/rpi_backlight/brightness"
-var POWER_FILE = "/sys/class/backlight/rpi_backlight/bl_power"
+    MIN_BRIGHTNESS string = "15"
+    MAX_BRIGHTNESS string = "255"
+    DEFAULT_ON string = "180"
+    ADJUST_UP string = "25"
+    ADJUST_DOWN string = "25"
+    BRIGHTNESS_FILE string = "/sys/class/backlight/rpi_backlight/brightness"
+    POWER_FILE string = "/sys/class/backlight/rpi_backlight/bl_power"
+    BRIGHT string = ""
 
-var BRIGHT = ""
+    colorReset string = "\x1b[0m"
+    red string = "\x1b[31m"
+//    yello string = "\x1b[33m"
+//    blue string = "\x1b[34m"
+//    pink string = "\x1b[35m"
+//    white string = "\x1b[37m"
+//    teal string = "\x1b[36m"
+)
 
 func help_menu() {
     fmt.Print("Usage: rpi-backlight [OPTION]\n")
@@ -85,22 +94,22 @@ func info_script() {
 
 func is_bright_file() {
     if _, err := os.Stat(BRIGHTNESS_FILE); os.IsNotExist(err) {
-        fmt.Print("\033[0;31mERROR: \033[0m")
-        fmt.Print("File does not exist:\n", BRIGHTNESS_FILE, "\n")
+        fmt.Print(red, "ERROR: ", colorReset)
+        fmt.Print("File does he not exist:\n", BRIGHTNESS_FILE, "\n")
         os.Exit(1)
     }
 }
 
 func is_write() {
     file, err := os.Create(BRIGHTNESS_FILE)
+    if os.IsPermission(err) {
+        fmt.Print(red, "ERROR: ", colorReset)
+        fmt.Print("Unable to write to: ", POWER_FILE, "\n")
+        fmt.Println(err)
+        os.Exit(1)
+    }
     if err != nil {
-        if os.IsPermission(err) {
-            fmt.Print("\033[0;31mERROR: \033[0m")
-            fmt.Print("Unable to write to: ", BRIGHTNESS_FILE, "\n")
-            fmt.Println(err)
-            os.Exit(1)
-        }
-        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Print(red, "ERROR: ", colorReset)
         fmt.Println(err)
         os.Exit(1)
     }
@@ -109,21 +118,24 @@ func is_write() {
 
 func is_power_file() {
     if _, err := os.Stat(POWER_FILE); os.IsNotExist(err) {
-        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Print(red, "ERROR: ", colorReset)
         fmt.Print("File does not exist:\n", POWER_FILE, "\n")
         os.Exit(1)
     }
     file, err := os.Create(POWER_FILE)
     if err != nil {
         if os.IsPermission(err) {
-            fmt.Print("\033[0;31mERROR: \033[0m")
+            fmt.Print(red, "ERROR: ", colorReset)
             fmt.Print("Unable to write to: ", POWER_FILE, "\n")
             fmt.Println(err)
             os.Exit(1)
         }
-        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Print(red, "ERROR: ", colorReset)
         fmt.Println(err)
         os.Exit(1)
+
+
+
     }
     defer file.Close()
 }
@@ -132,12 +144,12 @@ func is_power_file_perm() {
     file_perm, err := os.Create(POWER_FILE)
     if err != nil {
         if os.IsPermission(err) {
-            fmt.Print("\033[0;31mERROR: \033[0m")
+            fmt.Print(red, "ERROR: ", colorReset)
             fmt.Print("Unable to write to: ", POWER_FILE, "\n")
             fmt.Println(err)
             os.Exit(1)
         }
-        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Print(red, "ERROR: ", colorReset)
         fmt.Println(err)
         os.Exit(1)
     }
@@ -153,7 +165,7 @@ func sleep_mode() {
     time.Sleep(1 * time.Second)
     file_off, err := os.Create(POWER_FILE)
     if err != nil {
-        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Print(red, "ERROR: ", colorReset)
         fmt.Println(err)
         os.Exit(1)
     }
@@ -163,14 +175,17 @@ func sleep_mode() {
 
     // wait until user presses <ENTER>
     reader := bufio.NewReader(os.Stdin)
-    text, _ := reader.ReadString('\n')
-    // do nothing with the text
-    _ = text
+    _, err = reader.ReadString('\n')
+    if err != nil {
+        fmt.Print(red, "ERROR: ", colorReset)
+        fmt.Println(err)
+        os.Exit(1)
+    }
 
     // then reopen the file, and write 0 to POWER_FILE
     file_on, err := os.Create(POWER_FILE)
     if err != nil {
-        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Print(red, "ERROR: ", colorReset)
         fmt.Println(err)
         os.Exit(1)
     }
@@ -204,7 +219,7 @@ func write_file() {
 
     file, err := os.Create(BRIGHTNESS_FILE)
     if err != nil {
-        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Print(red, "ERROR: ", colorReset)
         fmt.Println(err)
         os.Exit(1)
     }
@@ -271,7 +286,7 @@ func turn_on() {
 
     file_bright, err := os.Create(BRIGHTNESS_FILE)
     if err != nil {
-        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Print(red, "ERROR: ", colorReset)
         fmt.Println(err)
         os.Exit(1)
     }
@@ -280,7 +295,7 @@ func turn_on() {
 
     file_power, err := os.Create(POWER_FILE)
     if err != nil {
-        fmt.Print("\033[0;31mERROR: \033[0m")
+        fmt.Print(red, "ERROR: ", colorReset)
         fmt.Println(err)
         os.Exit(1)
     }
