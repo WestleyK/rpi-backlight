@@ -2,9 +2,9 @@
 #
 # Created by: Westley K
 # email: westley@sylabs.io
-# Date: Aug 30, 2018
+# Date: Oct 17, 2018
 # https://github.com/WestleyK/rpi-backlight
-# Version-1.0.2
+# Version-1.0.3
 #
 # Designed and tested for raspberry pi with official 7 inch touchdcreen. 
 #
@@ -33,7 +33,7 @@
 #
 
 FILE_INFO="rpi_backlight_info.go"
-DATE=` date `
+DATE=` date "+%B %d, %Y, %I:%M:%S %p" `
 WHO=` whoami `
 ON=` hostname `
 WHERE=` pwd `
