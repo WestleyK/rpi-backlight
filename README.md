@@ -4,17 +4,17 @@ Designed and tested for raspberry pi with official 7 inch touchscreen.
 
 <br>
 
-Other script that do the same thing:
- - c: https://github.com/WestleyK/rpi-brightness
- - perl: https://github.com/WestleyK/pi-backlight
- - bash/shell: https://github.com/WestleyK/backlight
+Other scripts that do the same thing:
+ - C: https://github.com/WestleyK/rpi-brightness
+ - Perl: https://github.com/WestleyK/pi-backlight
+ - Bash/Shell: https://github.com/WestleyK/backlight
 
 <br>
 
 <br>
 
 
-## Install, Update and Uninstall:
+## Install, Update, and Uninstall:
 
 <br>
 
@@ -31,19 +31,19 @@ sudo make install
 ```
 <br>
 
-### Installing pre-compiled code:
+### Should you install the pre-compiled code?
 
-**Why install pre-compiled:**
+**Why install the pre-compiled:**
  - No dependency needed to install, (not that there is any).
  - You don't need golang to compile the source code.
 
-**Why not to install pre-compiled code:**
+**Why not to install the pre-compiled code:**
  - May not be fully compatible, (could only be partially compatible)
 <br>
 
 ### Install with one line:
 
-Paste this in your terminal:
+Copy-paste this in your terminal:
 ```
 curl https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/easy-install.sh | sh
 ```
