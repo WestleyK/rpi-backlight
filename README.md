@@ -4,18 +4,16 @@ Designed and tested for raspberry pi with official 7 inch touchscreen.
 
 <br>
 
-Other script that do the same thing:
- - c: https://github.com/WestleyK/rpi-brightness
- - perl: https://github.com/WestleyK/pi-backlight
- - bash/shell: https://github.com/WestleyK/backlight
+Other scripts that do the same thing:
+ - C: https://github.com/WestleyK/rpi-brightness
+ - Perl: https://github.com/WestleyK/pi-backlight
+ - Bash/Shell: https://github.com/WestleyK/backlight
 
 <br>
 
-## Install, Update and Uninstall:
+## Install, Update, and Uninstall:
 
 <br>
-
-### Install the source code:
 
 Install via `go get`:
 
@@ -34,19 +32,19 @@ sudo make install
 ```
 <br>
 
-### Installing pre-compiled code:
+### Should you install the pre-compiled code?
 
-**Why install pre-compiled:**
+**Why install the pre-compiled:**
  - No dependency needed to install, (not that there is any).
  - You don't need golang to compile the source code.
 
-**Why not to install pre-compiled code:**
+**Why not to install the pre-compiled code:**
  - May not be fully compatible, (could only be partially compatible)
 <br>
 
 ### Install with one line:
 
-Paste this in your terminal:
+Copy-paste this in your terminal:
 ```
 wget https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/pre-compiled/armv7l/rpi-backlight
 ```
@@ -77,15 +75,17 @@ sudo rm /usr/local/bin/rpi-backlight
 ```
 pi@raspberrypi:~ $ rpi-backlight --help
 Usage: rpi-backlight [OPTION]
-      -help | --help (print help menu)
-      [15-255] (adjust from: 15 to: 255)
-      -s | -sleep (enter sleep mode, press <ENTER> to exit this mode)
-      -u | -up (adjust brightness up by: 25/255)
-      -d | -down (adjust brightness down by: 25/255)
-      -c | -current (print current brightness)
-      -n | -on (turn backlight on to: 180
-      -i | -info (print info)
-      -version | --version (print version)
+      --help         : print help menu.
+      [15-255]       : adjust from: 15 to: 255.
+      -s, --sleep    : enter sleep mode, press <ENTER> to exit this mode.
+      -u, --up       : adjust brightness up by: 25/255.
+      -d, --down     : adjust brightness down by: 25/255.
+      -c, --current  : print current brightness.
+      -n, --on       : turn backlight on to: 180.
+      --version      : print script version.
+
+Copyright (c) 2018-2019 WestleyK, All rights reserved.
+This software is licensed under a Clear BSD License.
 Source code: https://github.com/WestleyK/rpi-backlight
 pi@raspberrypi:~ $ 
 ```
