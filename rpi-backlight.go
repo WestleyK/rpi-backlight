@@ -1,38 +1,20 @@
-// Created by: Westley K
-// email: westley@sylabs.io
-// Date: Sep 7, 2018
+// Created by: WestleyK
+// email: westleyk@nym.hush.com
+// Date: Feb 22, 2019
 // https://github.com/WestleyK/rpi-backlight
-// Version-1.1.3
+// Version-1.1.4
 //
-// Designed and tested for raspberry pi with official 7 inch touchdcreen. 
+// Designed and tested for raspberry pi with official 7 inch touchscreen. 
 //
+// The Clear BSD License
 //
-// MIT License
+// Copyright (c) 2018-2019 WestleyK
+// All rights reserved.
 //
-// Copyright (c) 2018 WestleyK
+// This software is licensed under a Clear BSD License.
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-//
-
 
 package main
-
 
 import (
     "os"
@@ -44,9 +26,9 @@ import (
     "io/ioutil"
 )
 
-var (
-    SCRIPT_VERSION string = "version-1.1.3"
-    SCRIPT_DATE string = "Date: Sep 7, 2018"
+const (
+    SCRIPT_VERSION string = "v-1.1.4"
+    SCRIPT_DATE string = "Date: Feb 22, 2019"
 
     MIN_BRIGHTNESS string = "15"
     MAX_BRIGHTNESS string = "255"
@@ -55,7 +37,6 @@ var (
     ADJUST_DOWN string = "25"
     BRIGHTNESS_FILE string = "/sys/class/backlight/rpi_backlight/brightness"
     POWER_FILE string = "/sys/class/backlight/rpi_backlight/bl_power"
-    BRIGHT string = ""
 
     colorReset string = "\x1b[0m"
     red string = "\x1b[31m"
@@ -66,36 +47,36 @@ var (
 //    teal string = "\x1b[36m"
 )
 
+var (
+    BRIGHT string = ""
+)
+
 func help_menu() {
-    fmt.Print("Usage: rpi-backlight [OPTION]\n")
-    fmt.Print("      -help | --help (print help menu)\n")
-    fmt.Print("      [", MIN_BRIGHTNESS, "-", MAX_BRIGHTNESS, "] (adjust from: ", MIN_BRIGHTNESS, " to: ", MAX_BRIGHTNESS, ")\n")
-    fmt.Print("      -s | -sleep (enter sleep mode, press <ENTER> to exit this mode)\n")
-    fmt.Print("      -u | -up (adjust brightness up by: ", ADJUST_UP, "/", MAX_BRIGHTNESS, ")\n")
-    fmt.Print("      -d | -down (adjust brightness down by: ", ADJUST_DOWN, "/", MAX_BRIGHTNESS, ")\n")
-    fmt.Print("      -c | -current (print current brightness)\n")
-    fmt.Print("      -n | -on (turn backlight on to: ", DEFAULT_ON, "\n")
-    fmt.Print("      -i | -info (print info)\n")
-    fmt.Print("      -version | --version (print version)\n")
-    fmt.Print("Source code: https://github.com/WestleyK/rpi-backlight\n")
+    fmt.Printf("Usage: rpi-backlight [OPTION]\n")
+    fmt.Printf("      --help         : print help menu.\n")
+    fmt.Printf("      [%v-%v]       : adjust from: %v to: %s.\n", MIN_BRIGHTNESS, MAX_BRIGHTNESS, MIN_BRIGHTNESS, MAX_BRIGHTNESS)
+    fmt.Printf("      -s, --sleep    : enter sleep mode, press <ENTER> to exit this mode.\n")
+    fmt.Printf("      -u, --up       : adjust brightness up by: %v/%v.\n", ADJUST_UP, MAX_BRIGHTNESS)
+    fmt.Printf("      -d, --down     : adjust brightness down by: %v/%v.\n", ADJUST_DOWN, MAX_BRIGHTNESS)
+    fmt.Printf("      -c, --current  : print current brightness.\n")
+    fmt.Printf("      -n, --on       : turn backlight on to: %v.\n", DEFAULT_ON)
+    fmt.Printf("      --version      : print script version.\n")
+    fmt.Printf("\n")
+    fmt.Printf("Copyright (c) 2018-2019 WestleyK, All rights reserved.\n")
+    fmt.Printf("This software is licensed under a Clear BSD License.\n")
+    fmt.Printf("Source code: https://github.com/WestleyK/rpi-backlight\n")
     os.Exit(0)
 }
 
 func script_version() {
-    fmt.Println(SCRIPT_VERSION)
-    fmt.Println(SCRIPT_DATE)
-    os.Exit(0)
-}
-
-func info_script() {
-    info()
+    fmt.Printf("%s, %s\n", SCRIPT_VERSION, SCRIPT_DATE)
     os.Exit(0)
 }
 
 func is_bright_file() {
     if _, err := os.Stat(BRIGHTNESS_FILE); os.IsNotExist(err) {
         fmt.Print(red, "ERROR: ", colorReset)
-        fmt.Print("File does he not exist:\n", BRIGHTNESS_FILE, "\n")
+        fmt.Print("File does not exist:\n", BRIGHTNESS_FILE, "\n")
         os.Exit(1)
     }
 }
@@ -341,28 +322,26 @@ func main() {
         OPTION := os.Args[1]
 
 
-        if OPTION == "-h" || OPTION == "-help" || OPTION == "--help" {
+        if OPTION == "--help" {
             help_menu()
-        } else if OPTION == "-u" || OPTION == "-up" {
+        } else if OPTION == "-u" || OPTION == "--up" {
             adjust_up()
-        } else if OPTION == "-d" || OPTION == "-down" {
+        } else if OPTION == "-d" || OPTION == "--down" {
             adjust_down()
-        } else if OPTION == "-s" || OPTION == "-sleep" {
+        } else if OPTION == "-s" || OPTION == "--sleep" {
             sleep_mode()
-        } else if OPTION == "-c" || OPTION == "-current" {
+        } else if OPTION == "-c" || OPTION == "--current" {
             current_bright()
-        } else if OPTION == "-n" || OPTION == "-on" {
+        } else if OPTION == "-n" || OPTION == "--on" {
             turn_on()
-        } else if OPTION == "-i" || OPTION == "-info" {
-            info_script()
-        } else if OPTION == "-v" || OPTION == "-version" || OPTION == "--version" {
+        } else if OPTION == "--version" {
             script_version()
         } else if _, err := strconv.Atoi(OPTION); err == nil {
             BRIGHT = OPTION
             adjust_bright()
         } else {
             fmt.Print("Option not found!  :P  ", OPTION, "\n")
-            fmt.Print("Try:  $ rpi-backlight -help  (for help)\n")
+            fmt.Print("Try:  $ rpi-backlight --help  (for help)\n")
             os.Exit(1)
         }
     }
@@ -370,10 +349,6 @@ func main() {
 
 }
 
-
-
 //
 // End source code
 //
-
-
