@@ -11,19 +11,22 @@ Other script that do the same thing:
 
 <br>
 
-<br>
-
-
 ## Install, Update and Uninstall:
 
 <br>
 
 ### Install the source code:
 
+Install via `go get`:
+
 ```
-cd ~/
-mkdir raspberrypi-backlight
-cd raspberrypi-backlight/
+go get -u github.com/WestleyK/rpi-backlight
+```
+
+Or, clone the source code:
+
+```
+cd /tmp
 git clone https://github.com/WestleyK/rpi-backlight
 cd rpi-backlight/
 make
@@ -45,49 +48,15 @@ sudo make install
 
 Paste this in your terminal:
 ```
-curl https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/easy-install.sh | sh
+wget https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/pre-compiled/armv7l/rpi-backlight
 ```
 This will install `rpi-backlight` to the current directory.
 
 To finish the install, do:
 ```
+chmod +x rpi-backlight
 sudo mv rpi-backlight /usr/local/bin/
 ```
-<br>
-
-#### Install by cloning repo:
-
-```
-cd ~/
-mkdir raspberrypi-backlight
-cd raspberrypi-backlight/
-git clone https://github.com/WestleyK/rpi-backlight
-cd rpi-backlight/pre-compiled/
-sudo ./make.sh install
-```
-
-<br>
-<br>
-
-### Update:
-
-Update the repo:
-```
-cd ~/raspberrypi-backlight/rpi-backlight/
-make update
-make
-sudo make install
-```
-
-Or just update the binary:
-
-```
-curl https://raw.githubusercontent.com/WestleyK/rpi-backlight/master/easy-install.sh | sh
-sudo mv -f rpi-backlight /usr/local/bin/
-```
-Basically the same commands as installing the binary.
-
-
 <br>
 
 ### Uninstall:
@@ -96,18 +65,17 @@ Basically the same commands as installing the binary.
 cd ~/raspberrypi-backlight/rpi-backlight/
 sudo make uninstall
 ```
+
 Or uninstall manualy:
+
 ```
 sudo rm /usr/local/bin/rpi-backlight
 ```
 
-<br>
-<br>
-
 ## Usage:
 
 ```
-pi@raspberrypi:~ $ rpi-backlight -help
+pi@raspberrypi:~ $ rpi-backlight --help
 Usage: rpi-backlight [OPTION]
       -help | --help (print help menu)
       [15-255] (adjust from: 15 to: 255)
@@ -122,12 +90,4 @@ Source code: https://github.com/WestleyK/rpi-backlight
 pi@raspberrypi:~ $ 
 ```
 
-
-### End README
-
-
 <br>
-<br>
-
-
-
