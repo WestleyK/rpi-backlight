@@ -1,66 +1,40 @@
-# Created by: Westley K
+# Created by: WestleyK
 # email: westley@sylabs.io
-# Date: Aug 27, 2018
+# Date: Feb 22, 2019
 # https://github.com/WestleyK/rpi-backlight
 # Version-1.0.0
 #
-# Designed and tested for raspberry pi with official 7 inch touchdcreen. 
+# Designed and tested for raspberry pi with official 7 inch touchscreen. 
 #
+# The Clear BSD License
 #
-# MIT License
+# Copyright (c) 2018-2019 WestleyK
+# All rights reserved.
 #
-# Copyright (c) 2018 WestleyK
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+# This software is licensed under a Clear BSD License.
 #
 
+TARGET = rpi-backlight
+PREFIX = /usr/local/bin
 
-CODE_NAME = rpi-backlight.go
-INFO_NAME = rpi_backlight_info.go
-INFO_GEN = generator-info.sh
-SCRIPT_NAME = rpi-backlight
-INSTALL_TO = /usr/local/bin/
+MAIN = rpi-backlight.go
 
+.PHONY:
+all: $(TARGET)
 
-all: $(CODE_NAME)
-	@./$(INFO_GEN)
-	@echo "Compileing code..."
-	go build $(CODE_NAME) $(INFO_NAME)
-	@rm -f $(INFO_NAME)
-	@echo "Done."
-	@echo ">> Do:"
-	@echo "  $$ sudo make install"
+.PHONY:
+$(TARGET): $(MAIN)
+	go build
 
-install:
-	chmod +x $(SCRIPT_NAME)
-	cp -f $(SCRIPT_NAME) $(INSTALL_TO)
+.PHONY:
+install: $(TARGET)
+	chmod +x $(TARGET)
+	cp -f $(TARGET) $(PREFIX)
 
-update:
-	rm -f $(SCRIPT_NAME)
-	git pull origin master
-
-uninstall:
-	rm $(INSTALL_TO)$(SCRIPT_NAME)
-
-
+.PHONY:
+uninstall: $(PREFIX)/$(TARGET)
+	rm -f $(PREFIX)/$(TARGET)
 
 #
 # End Makefile
 #
-
